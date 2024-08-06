@@ -1,35 +1,66 @@
-import Link from "next/link";
+"use client";
+import React, { useState, useEffect } from "react";
+
+const prayers: string[] = ["Fajr", "Shuruq", "Doha", "Dhuhr", "Asr", "Maghrib", "Isha", "Tahajjud"];
+
+const colorCodes = {
+  valid: "text-green-500",
+  busy: "text-red-500",
+  critical: "text-black",
+};
+
+const colorCode = colorCodes.valid;
+const prayerName = prayers[4];
+
+interface DTGradient {
+  from: string;
+  to: string;
+}
+
+const gradients: DTGradient[] = [
+  { from: "#012459", to: "#001322" },
+  { from: "#fee154", to: "#a3dec6" },
+  { from: "#f18448", to: "#ffd364" },
+  { from: "#5b2c83", to: "#d1628b" },
+];
+
+function getCurrentGradient(): DTGradient {
+  return gradients[1]!;
+}
 
 export default function HomePage() {
+  const [count, setCount] = useState(0);
+
+  const increment = () => {
+    setCount((count + 1) % 4);
+    setGradient(gradients[count]!);
+  };
+
+  const [gradient, setGradient] = useState(getCurrentGradient());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setGradient(getCurrentGradient());
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.style.setProperty("--gradient-from", gradient.from);
+    document.documentElement.style.setProperty("--gradient-to", gradient.to);
+  }, [gradient]);
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+    <main className="gradient-background flex min-h-screen flex-col items-center justify-center text-white">
+      <button onClick={increment}>next</button>
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-        <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-          Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
+        <h1 className="rounded-full border bg-white p-8 text-5xl font-extrabold tracking-tight sm:text-[5rem]">
+          <span className={colorCode}>{prayerName}</span>
         </h1>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/usage/first-steps"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">First Steps →</h3>
-            <div className="text-lg">
-              Just the basics - Everything you need to know to set up your
-              database and authentication.
-            </div>
-          </Link>
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/introduction"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">Documentation →</h3>
-            <div className="text-lg">
-              Learn more about Create T3 App, the libraries it uses, and how to
-              deploy it.
-            </div>
-          </Link>
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20">
+            <div className="text-lg">Fajr in 00:00</div>
+          </div>
         </div>
       </div>
     </main>

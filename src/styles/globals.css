@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --gradient-from: #012459;
+  --gradient-to: #001322;
+}
+
+.gradient-background {
+  background: linear-gradient(
+    to bottom,
+    var(--gradient-from),
+    var(--gradient-to)
+  );
+}
