@@ -25,17 +25,21 @@ const gradients: DTGradient[] = [
 ];
 
 function getCurrentGradient(): DTGradient {
-  return gradients[1]!;
+  const now = new Date();
+  const hours = now.getHours();
+  if (hours < 5) {
+    return gradients[0]!;
+  }
+  if (hours < 10) {
+    return gradients[1]!;
+  }
+  if (hours < 16) {
+    return gradients[2]!;
+  }
+  return gradients[3]!;
 }
 
 export default function HomePage() {
-  const [count, setCount] = useState(0);
-
-  const increment = () => {
-    setCount((count + 1) % 4);
-    setGradient(gradients[count]!);
-  };
-
   const [gradient, setGradient] = useState(getCurrentGradient());
 
   useEffect(() => {
@@ -52,9 +56,8 @@ export default function HomePage() {
 
   return (
     <main className="gradient-background flex min-h-screen flex-col items-center justify-center text-white">
-      <button onClick={increment}>next</button>
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-        <h1 className="rounded-full border bg-white p-8 text-5xl font-extrabold tracking-tight sm:text-[5rem]">
+        <h1 className="rounded-full bg-white/10 px-16 py-8 text-5xl font-extrabold tracking-tight text-white hover:bg-white/20 sm:text-[5rem]">
           <span className={colorCode}>{prayerName}</span>
         </h1>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">

@@ -8,9 +8,6 @@
 }
 
 .gradient-background {
-  background: linear-gradient(
-    to bottom,
-    var(--gradient-from),
-    var(--gradient-to)
-  );
+  background: linear-gradient(to bottom, var(--gradient-from), var(--gradient-to));
+  transition: background 2s ease;
 }
