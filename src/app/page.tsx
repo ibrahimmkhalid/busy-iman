@@ -30,10 +30,10 @@ function getCurrentGradient(): DTGradient {
   if (hours < 5) {
     return gradients[0]!;
   }
-  if (hours < 10) {
+  if (hours < 11) {
     return gradients[1]!;
   }
-  if (hours < 16) {
+  if (hours < 18) {
     return gradients[2]!;
   }
   return gradients[3]!;
