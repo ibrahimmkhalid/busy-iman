@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-
-const prayers: string[] = ["Fajr", "Shuruq", "Doha", "Dhuhr", "Asr", "Maghrib", "Isha", "Tahajjud"];
+import { api } from "~/trpc/react";
 
 const colorCodes = {
   valid: "text-green-500",
@@ -10,7 +9,6 @@ const colorCodes = {
 };
 
 const colorCode = colorCodes.valid;
-const prayerName = prayers[4];
 
 interface DTGradient {
   from: string;
@@ -24,8 +22,9 @@ const gradients: DTGradient[] = [
   { from: "#5b2c83", to: "#d1628b" },
 ];
 
+const now = new Date();
+
 function getCurrentGradient(): DTGradient {
-  const now = new Date();
   const hours = now.getHours();
   if (hours < 5) {
     return gradients[0]!;
@@ -41,6 +40,23 @@ function getCurrentGradient(): DTGradient {
 
 export default function HomePage() {
   const [gradient, setGradient] = useState(getCurrentGradient());
+
+  const { data: prayerTimings, isLoading } = api.prayer.getPrayerTimings.useQuery({
+    date: now.toISOString().split("T")[0]!,
+    long: 37.5339,
+    lat: -122.0085,
+    elevation: 0,
+    tz: -7,
+    asr2: true,
+    fajrAngle: 15,
+    ishaAngle: 15,
+  });
+
+  function getCurrentPrayer() {
+    if (prayerTimings === undefined) return "invalid";
+    console.log(prayerTimings);
+    return "pqoiwe";
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -58,7 +74,11 @@ export default function HomePage() {
     <main className="gradient-background flex min-h-screen flex-col items-center justify-center text-white">
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
         <h1 className="rounded-full bg-white/10 px-16 py-8 text-5xl font-extrabold tracking-tight text-white hover:bg-white/20 sm:text-[5rem]">
-          <span className={colorCode}>{prayerName}</span>
+          {isLoading ? (
+            <span className={colorCode}>loading...</span>
+          ) : (
+            <span className={colorCode}>{getCurrentPrayer()}</span>
+          )}
         </h1>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           <div className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20">
