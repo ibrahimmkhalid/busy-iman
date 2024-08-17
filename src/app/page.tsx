@@ -42,7 +42,7 @@ export default function HomePage() {
   const [gradient, setGradient] = useState(getCurrentGradient());
 
   const { data: prayerTimings, isLoading } = api.prayer.getPrayerTimings.useQuery({
-    date: now.toISOString().split("T")[0]!,
+    date: now.toISOString(),
     long: 37.5339,
     lat: -122.0085,
     elevation: 0,
@@ -54,7 +54,7 @@ export default function HomePage() {
 
   function getCurrentPrayer() {
     if (prayerTimings === undefined) return "invalid";
-    console.log(prayerTimings);
+    console.log(JSON.stringify(prayerTimings).replaceAll("},", "},\n"));
     return "pqoiwe";
   }
 
