@@ -43,8 +43,8 @@ export default function HomePage() {
 
   const { data: prayerTimings, isLoading } = api.prayer.getPrayerTimings.useQuery({
     date: now.toISOString(),
-    long: 37.5339,
-    lat: -122.0085,
+    long: -122.0085,
+    lat: 37.5339,
     elevation: 0,
     tz: -7,
     asr2: true,
