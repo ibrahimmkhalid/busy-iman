@@ -54,7 +54,6 @@ export default function HomePage() {
 
   function getCurrentPrayer() {
     if (prayerTimings === undefined) return "invalid";
-    console.log(JSON.stringify(prayerTimings).replaceAll("},", "},\n"));
     return "pqoiwe";
   }
 

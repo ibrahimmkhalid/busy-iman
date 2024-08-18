@@ -51,7 +51,7 @@ export const prayerRouter = createTRPCRouter({
     .query(({ input }) => {
       const datetime = new Date(input.date);
       let Y = datetime.getFullYear();
-      let M = datetime.getMonth();
+      let M = datetime.getMonth() + 1;
       const D = datetime.getDate();
       const H = datetime.getHours();
       const HHHH = input.elevation ?? 0;
@@ -132,7 +132,7 @@ export const prayerRouter = createTRPCRouter({
           type: "forbidden",
         },
         doha: {
-          time: SUNRISE + 0.5,
+          time: SUNRISE + 1 / 3,
           type: "nafl",
         },
         dhuhar: {
