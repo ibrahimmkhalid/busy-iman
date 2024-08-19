@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { api } from "~/trpc/react";
+import { type DTPrayerTime } from "~/server/api/routers/prayer";
 
 const colorCodes = {
   valid: "text-green-500",
@@ -22,27 +23,18 @@ const gradients: DTGradient[] = [
   { from: "#5b2c83", to: "#d1628b" },
 ];
 
-const now = new Date();
-
-function getCurrentGradient(): DTGradient {
-  const hours = now.getHours();
-  if (hours < 5) {
-    return gradients[0]!;
-  }
-  if (hours < 11) {
-    return gradients[1]!;
-  }
-  if (hours < 18) {
-    return gradients[2]!;
-  }
-  return gradients[3]!;
-}
+const defaultPrayer: DTPrayerTime = {
+  time: 0,
+  type: "forbidden",
+  name: "invalid",
+};
 
 export default function HomePage() {
-  const [gradient, setGradient] = useState(getCurrentGradient());
+  const [gradient, setGradient] = useState(gradients[0]);
+  const [currentPrayer, setCurrentPrayer] = useState<DTPrayerTime>(defaultPrayer);
 
   const { data: prayerTimings, isLoading } = api.prayer.getPrayerTimings.useQuery({
-    date: now.toISOString(),
+    date: new Date().toISOString(),
     long: -122.0085,
     lat: 37.5339,
     elevation: 0,
@@ -52,17 +44,38 @@ export default function HomePage() {
     ishaAngle: 15,
   });
 
-  function getCurrentPrayer() {
-    if (prayerTimings === undefined) return "invalid";
-    return "pqoiwe";
-  }
-
   useEffect(() => {
     const interval = setInterval(() => {
-      setGradient(getCurrentGradient());
+      const now = new Date();
+      const hour = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
+      if (hour < 5 && hour >= 0) {
+        setGradient(gradients[0]);
+      }
+      if (hour < 11 && hour >= 5) {
+        setGradient(gradients[1]);
+      }
+      if (hour < 18 && hour >= 11) {
+        setGradient(gradients[2]);
+      }
+      if (hour >= 18) {
+        setGradient(gradients[3]);
+      }
+
+      if (prayerTimings === undefined) {
+        setCurrentPrayer(defaultPrayer);
+      } else {
+        if (hour >= prayerTimings.fajr.time && hour < prayerTimings.shuruq.time) setCurrentPrayer(prayerTimings.fajr);
+        if (hour >= prayerTimings.shuruq.time && hour < prayerTimings.dhuhar.time)
+          setCurrentPrayer(prayerTimings.shuruq);
+        if (hour >= prayerTimings.dhuhar.time && hour < prayerTimings.asr.time) setCurrentPrayer(prayerTimings.dhuhar);
+        if (hour >= prayerTimings.asr.time && hour < prayerTimings.maghrib.time) setCurrentPrayer(prayerTimings.asr);
+        if (hour >= prayerTimings.maghrib.time && hour < prayerTimings.isha.time)
+          setCurrentPrayer(prayerTimings.maghrib);
+        if (hour >= prayerTimings.isha.time) setCurrentPrayer(prayerTimings.isha);
+      }
     }, 60000);
     return () => clearInterval(interval);
-  }, []);
+  });
 
   useEffect(() => {
     document.documentElement.style.setProperty("--gradient-from", gradient.from);
@@ -76,7 +89,7 @@ export default function HomePage() {
           {isLoading ? (
             <span className={colorCode}>loading...</span>
           ) : (
-            <span className={colorCode}>{getCurrentPrayer()}</span>
+            <span className={colorCode}>{currentPrayer.name}</span>
           )}
         </h1>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
