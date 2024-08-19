@@ -1,9 +1,10 @@
 import { z } from "zod";
 import { publicProcedure, createTRPCRouter } from "~/server/api/trpc";
 
-interface DTPrayerTime {
+export interface DTPrayerTime {
   time: number;
   type: "fard" | "nafl" | "forbidden";
+  name: string;
 }
 
 interface DTAllPrayers {
@@ -14,7 +15,7 @@ interface DTAllPrayers {
   asr: DTPrayerTime;
   maghrib: DTPrayerTime;
   isha: DTPrayerTime;
-  midnight: { time: number; today: boolean } | undefined;
+  midnight: { time: number; today: boolean };
 }
 
 function deg2rad(degrees: number): number {
@@ -124,32 +125,42 @@ function calculateTimingsForGivenDate(datetime: Date, input: DTPrayerInput): DTA
     fajr: {
       time: FAJR,
       type: "fard",
+      name: "Fajr",
     },
     shuruq: {
       time: SUNRISE,
       type: "forbidden",
+      name: "Shuruq",
     },
     doha: {
       time: SUNRISE + 1 / 3,
       type: "nafl",
+      name: "Doha",
     },
     dhuhar: {
       time: ZUHR,
       type: "fard",
+      name: "Dhuhr",
     },
     asr: {
       time: ASR,
       type: "fard",
+      name: "Asr",
     },
     maghrib: {
       time: MAGHRIB,
       type: "fard",
+      name: "Maghrib",
     },
     isha: {
       time: ISHA,
       type: "fard",
+      name: "Isha",
     },
-    midnight: undefined,
+    midnight: {
+      time: 0,
+      today: false,
+    },
   } as DTAllPrayers;
 }
 
