@@ -7,7 +7,7 @@ export interface DTPrayerTime {
   name: string;
 }
 
-interface DTAllPrayers {
+export interface DTAllPrayers {
   fajr: DTPrayerTime;
   shuruq: DTPrayerTime;
   doha: DTPrayerTime;
