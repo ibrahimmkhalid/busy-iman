@@ -47,7 +47,7 @@ export default function HomePage() {
     lat: 37.5339,
     elevation: 0,
     tz: -7,
-    asr2: true,
+    asr2: false,
     fajrAngle: 15,
     ishaAngle: 15,
   });
