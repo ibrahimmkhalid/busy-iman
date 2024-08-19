@@ -1,6 +1,7 @@
 import React from "react";
 import Canvas from "~/components/canvas";
 import CurrentPrayer from "~/components/currentPrayer";
+import PrayerCounter from "~/components/prayerCounter";
 import { api } from "~/trpc/server";
 
 const now = new Date().toISOString();
@@ -19,6 +20,7 @@ export default async function App() {
   return (
     <Canvas>
       <CurrentPrayer prayerTimings={data} />
+      <PrayerCounter prayerTimings={data} />
     </Canvas>
   );
 }
