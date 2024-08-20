@@ -23,14 +23,21 @@ export default function CurrentPrayer({ prayerTimings }: CurrentPrayerProps) {
       if (prayerTimings === undefined) {
         setCurrentPrayer(defaultPrayer);
       } else {
-        if (hour >= prayerTimings.fajr.time && hour < prayerTimings.shuruq.time) setCurrentPrayer(prayerTimings.fajr);
-        if (hour >= prayerTimings.shuruq.time && hour < prayerTimings.dhuhar.time)
-          setCurrentPrayer(prayerTimings.shuruq);
-        if (hour >= prayerTimings.dhuhar.time && hour < prayerTimings.asr.time) setCurrentPrayer(prayerTimings.dhuhar);
-        if (hour >= prayerTimings.asr.time && hour < prayerTimings.maghrib.time) setCurrentPrayer(prayerTimings.asr);
+        if (hour >= prayerTimings.fajr.time && hour < prayerTimings.shuruq.time)
+          return setCurrentPrayer(prayerTimings.fajr);
+        if (hour >= prayerTimings.shuruq.time && hour < prayerTimings.doha.time)
+          return setCurrentPrayer(prayerTimings.shuruq);
+        if (hour >= prayerTimings.doha.time && hour < prayerTimings.dhuhar.time)
+          return setCurrentPrayer(prayerTimings.doha);
+        if (hour >= prayerTimings.dhuhar.time && hour < prayerTimings.asr.time)
+          return setCurrentPrayer(prayerTimings.dhuhar);
+        if (hour >= prayerTimings.asr.time && hour < prayerTimings.maghrib.time)
+          return setCurrentPrayer(prayerTimings.asr);
         if (hour >= prayerTimings.maghrib.time && hour < prayerTimings.isha.time)
-          setCurrentPrayer(prayerTimings.maghrib);
-        if (hour >= prayerTimings.isha.time) setCurrentPrayer(prayerTimings.isha);
+          return setCurrentPrayer(prayerTimings.maghrib);
+        if (hour >= prayerTimings.isha.time && hour < prayerTimings.midnight.time)
+          return setCurrentPrayer(prayerTimings.isha);
+        return setCurrentPrayer(prayerTimings.midnight);
       }
     }
 

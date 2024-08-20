@@ -28,6 +28,7 @@ export default function PrayerCounter({ prayerTimings }: PrayerCounterProps) {
     prayerTimings.asr,
     prayerTimings.maghrib,
     prayerTimings.isha,
+    prayerTimings.midnight,
   ];
   return (
     <div className="grid grid-cols-2 gap-4 md:grid-cols-4">

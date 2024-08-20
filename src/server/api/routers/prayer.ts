@@ -15,7 +15,7 @@ export interface DTAllPrayers {
   asr: DTPrayerTime;
   maghrib: DTPrayerTime;
   isha: DTPrayerTime;
-  midnight: { time: number; today: boolean };
+  midnight: DTPrayerTime;
 }
 
 function deg2rad(degrees: number): number {
@@ -158,8 +158,9 @@ function calculateTimingsForGivenDate(datetime: Date, input: DTPrayerInput): DTA
       name: "Isha",
     },
     midnight: {
-      time: 0,
-      today: false,
+      time: 23.9999,
+      type: "nafl",
+      name: "Midnight",
     },
   } as DTAllPrayers;
 }
@@ -173,10 +174,7 @@ export const prayerRouter = createTRPCRouter({
     const todayMaghrib = todayTimings.maghrib.time;
     const tmrwFajr = tmrwTimings.fajr.time + 24;
     const midnight = (todayMaghrib + tmrwFajr) / 2;
-    todayTimings.midnight = {
-      time: midnight,
-      today: midnight < 24,
-    };
+    todayTimings.midnight.time = midnight;
 
     return todayTimings;
   }),
