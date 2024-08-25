@@ -20,13 +20,14 @@ export default function PrayerCard({ datum }: PrayerCardProps) {
       prayerTime.setHours(H, m, s);
       const diff = (prayerTime.getTime() - now.getTime()) / (1000 * 3600);
       const hour = Math.floor(diff);
-      const min = Math.round((diff - hour) * 60);
+      const min = Math.floor((diff - hour) * 60);
       const sec = Math.round((diff - hour - min / 60) * 3600);
       if (diff < 1) {
         if (diff <= 0) {
           setText(`${name} is in 00:00`);
+        } else {
+          setText(`${name} is in ${min.toString().padStart(2, "0")}:${sec.toString().padStart(2, "0")}`);
         }
-        setText(`${name} is in ${min.toString().padStart(2, "0")}:${sec.toString().padStart(2, "0")}`);
       } else {
         setText(`${name} is in ${hour.toString().padStart(2, "0")}:${min.toString().padStart(2, "0")}`);
       }
