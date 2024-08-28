@@ -9,7 +9,7 @@ interface CurrentPrayerProps {
 const defaultPrayer: DTPrayerTime = {
   time: 0,
   type: "forbidden",
-  name: "invalid",
+  name: "loading...",
 };
 
 export default function CurrentPrayer({ prayerTimings }: CurrentPrayerProps) {
