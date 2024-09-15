@@ -3,6 +3,7 @@ import { publicProcedure, createTRPCRouter } from "~/server/api/trpc";
 
 export interface DTPrayerTime {
   time: number;
+  end: number;
   type: "fard" | "nafl" | "forbidden";
   name: string;
 }
@@ -124,41 +125,49 @@ function calculateTimingsForGivenDate(datetime: Date, input: DTPrayerInput): DTA
   return {
     fajr: {
       time: FAJR,
+      end: SUNRISE,
       type: "fard",
       name: "Fajr",
     },
     shuruq: {
       time: SUNRISE,
+      end: SUNRISE + 1 / 3,
       type: "forbidden",
       name: "Shuruq",
     },
     doha: {
       time: SUNRISE + 1 / 3,
+      end: ZUHR,
       type: "nafl",
       name: "Doha",
     },
     dhuhar: {
       time: ZUHR,
+      end: ASR,
       type: "fard",
       name: "Dhuhr",
     },
     asr: {
       time: ASR,
+      end: MAGHRIB,
       type: "fard",
       name: "Asr",
     },
     maghrib: {
       time: MAGHRIB,
+      end: ISHA,
       type: "fard",
       name: "Maghrib",
     },
     isha: {
       time: ISHA,
+      end: 23.9999,
       type: "fard",
       name: "Isha",
     },
     midnight: {
       time: 23.9999,
+      end: 30,
       type: "nafl",
       name: "Midnight",
     },
@@ -174,8 +183,9 @@ export const prayerRouter = createTRPCRouter({
     const todayMaghrib = todayTimings.maghrib.time;
     const tmrwFajr = tmrwTimings.fajr.time + 24;
     const midnight = (todayMaghrib + tmrwFajr) / 2;
+    todayTimings.isha.end = midnight;
     todayTimings.midnight.time = midnight;
-
+    todayTimings.midnight.end = tmrwFajr;
     return todayTimings;
   }),
 });
