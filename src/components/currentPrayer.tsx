@@ -8,6 +8,7 @@ interface CurrentPrayerProps {
 
 const defaultPrayer: DTPrayerTime = {
   time: 0,
+  end: 0,
   type: "forbidden",
   name: "loading...",
 };
