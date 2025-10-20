@@ -1,5 +1,12 @@
 "use client";
-import React, { useState, useEffect, type ReactNode } from "react";
+import React, { useState, useEffect, type ReactNode, createContext } from "react";
+
+const TimeFormatContext = createContext<{ is24Hour: boolean; toggle: () => void }>({
+  is24Hour: true,
+  toggle: () => {
+    // no-op
+  },
+});
 
 interface DTGradient {
   from: string;
@@ -19,6 +26,7 @@ interface CanvasProps {
 
 export default function Canvas({ children }: CanvasProps) {
   const [gradient, setGradient] = useState(gradients[0]);
+  const [is24Hour, setIs24Hour] = useState(true);
 
   useEffect(() => {
     function getCurrentGradient() {
@@ -46,9 +54,39 @@ export default function Canvas({ children }: CanvasProps) {
     document.documentElement.style.setProperty("--gradient-to", gradient.to);
   }, [gradient]);
 
+  useEffect(() => {
+    const saved = sessionStorage.getItem("timeFormat");
+    if (saved !== null) {
+      setIs24Hour(saved === "24");
+    }
+  }, []);
+
+  const toggleFormat = () => {
+    const newVal = !is24Hour;
+    setIs24Hour(newVal);
+    sessionStorage.setItem("timeFormat", newVal ? "24" : "12");
+  };
+
   return (
-    <main className="gradient-background flex min-h-screen flex-col items-center justify-center text-white">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">{children}</div>
-    </main>
+    <TimeFormatContext.Provider value={{ is24Hour, toggle: toggleFormat }}>
+      <main className="gradient-background flex min-h-screen flex-col text-white">
+        <nav className="flex items-center justify-between px-4 py-4">
+          <div className="flex gap-8">
+            <a href="/timer" className="text-lg font-medium hover:underline">
+              Timer
+            </a>
+            <a href="/timeline" className="text-lg font-medium hover:underline">
+              Timeline
+            </a>
+          </div>
+          <button onClick={toggleFormat} className="text-lg font-medium hover:underline">
+            {is24Hour ? "24H" : "12H"}
+          </button>
+        </nav>
+        <div className="flex flex-1 flex-col items-center justify-center gap-12 px-4 py-16">{children}</div>
+      </main>
+    </TimeFormatContext.Provider>
   );
 }
+
+export { TimeFormatContext };
