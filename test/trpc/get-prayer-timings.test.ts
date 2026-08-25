@@ -3,6 +3,10 @@ import { expect, it } from "vitest";
 import { appRouter } from "~/server/api/root";
 import { createInnerTRPCContext } from "~/server/api/trpc";
 import { type RouterOutputs, type RouterInputs } from "~/trpc/react";
+import { type DTPrayerTime } from "~/server/api/routers/prayer";
+
+type PrayerKey = Exclude<keyof RouterOutputs["prayer"]["getPrayerTimings"], "midnight">;
+type ExpectedTimings = Record<PrayerKey, Pick<DTPrayerTime, "time" | "type">>;
 
 it("should calculate the correct times of prayer for jakarta", async () => {
   const ctx = createInnerTRPCContext();
@@ -19,7 +23,7 @@ it("should calculate the correct times of prayer for jakarta", async () => {
     ishaAngle: 18,
     elevation: 8,
   };
-  const output: RouterOutputs["prayer"]["getPrayerTimings"] = {
+  const output: ExpectedTimings = {
     fajr: {
       time: 4.5493,
       type: "fard",
@@ -48,7 +52,6 @@ it("should calculate the correct times of prayer for jakarta", async () => {
       time: 19.0175,
       type: "fard",
     },
-    midnight: undefined,
   };
 
   const result = await caller.prayer.getPrayerTimings(input);
@@ -87,7 +90,7 @@ it("should calculate the correct times of prayer for fremont", async () => {
   };
 
   // times collected from "MAWAQIT" app using ISNA settings
-  const output: RouterOutputs["prayer"]["getPrayerTimings"] = {
+  const output: ExpectedTimings = {
     fajr: {
       time: 5 + 9 / 60,
       type: "fard",
@@ -116,7 +119,6 @@ it("should calculate the correct times of prayer for fremont", async () => {
       time: 21 + 13 / 60,
       type: "fard",
     },
-    midnight: undefined,
   };
 
   const result = await caller.prayer.getPrayerTimings(input);
