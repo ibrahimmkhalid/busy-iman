@@ -6,6 +6,7 @@ export interface DTPrayerTime {
   end: number;
   type: "fard" | "nafl" | "forbidden";
   name: string;
+  info: string;
 }
 
 export interface DTAllPrayers {
@@ -128,48 +129,56 @@ function calculateTimingsForGivenDate(datetime: Date, input: DTPrayerInput): DTA
       end: SUNRISE,
       type: "fard",
       name: "Fajr",
+      info: "The first prayer of the day as defined by the first string of light in the night sky, just before dawn.",
     },
     shuruq: {
       time: SUNRISE,
       end: SUNRISE + 1 / 3,
       type: "forbidden",
       name: "Shuruq",
+      info: "The period just after the sun rises, during which praying is not permitted.",
     },
     doha: {
       time: SUNRISE + 1 / 3,
       end: ZUHR,
       type: "nafl",
       name: "Doha",
+      info: "The optional mid morning prayer, starting once the sun has risen well above the horizon and lasting until Dhuhr.",
     },
     dhuhar: {
       time: ZUHR,
       end: ASR,
       type: "fard",
       name: "Dhuhr",
+      info: "The middle of the day, the time when the sun is at its highest point above the horizon and an object's shadow is at its shortest.",
     },
     asr: {
       time: ASR,
       end: MAGHRIB,
       type: "fard",
       name: "Asr",
+      info: `When the length of the shadow of an object increases by ${SF ? "2" : "1"} times its own length compared to the length of the shadow at Dhuhr.`,
     },
     maghrib: {
       time: MAGHRIB,
       end: ISHA,
       type: "fard",
       name: "Maghrib",
+      info: "Defined as the time when the sun just sets on the horizon.",
     },
     isha: {
       time: ISHA,
       end: 23.9999,
       type: "fard",
       name: "Isha",
+      info: "The last obligatory prayer of the day defined by the full passing of the sun past the horizon and the night sky becomes dark.",
     },
     midnight: {
       time: 23.9999,
       end: 30,
       type: "nafl",
       name: "Midnight",
+      info: "Defined as the preferred last time to pray Isha and the start of optional night prayers including Tahajjud.",
     },
   } as DTAllPrayers;
 }

@@ -79,6 +79,7 @@ export default function PrayerCard({ datum }: PrayerCardProps) {
 
   return (
     <div
+      title={datum.info}
       className={`flex max-w-xs flex-col gap-2 rounded-xl p-4 text-white transition-all duration-300 ${
         isCurrent
           ? "border-2 border-white/50 bg-white/30 shadow-lg"

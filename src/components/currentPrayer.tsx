@@ -11,6 +11,7 @@ const defaultPrayer: DTPrayerTime = {
   end: 0,
   type: "forbidden",
   name: "loading...",
+  info: "",
 };
 
 export default function CurrentPrayer({ prayerTimings }: CurrentPrayerProps) {
@@ -48,7 +49,10 @@ export default function CurrentPrayer({ prayerTimings }: CurrentPrayerProps) {
   }, [prayerTimings]);
 
   return (
-    <h1 className="rounded-full bg-white/10 px-16 py-8 text-5xl font-extrabold tracking-tight text-white hover:bg-white/20 sm:text-[5rem]">
+    <h1
+      title={currentPrayer.info}
+      className="rounded-full bg-white/10 px-16 py-8 text-5xl font-extrabold tracking-tight text-white hover:bg-white/20 sm:text-[5rem]"
+    >
       <span>{currentPrayer.name}</span>
     </h1>
   );
